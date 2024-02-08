@@ -51,13 +51,13 @@ function App() {
     else setFilteredIps('')
   }
   return (
-    <main className="w-screen h-screen bg-gray-200 max-w-7xl mx-auto  p-4">
+    <main className="min-h-screen bg-gray-200 max-w-7xl mx-auto  p-4">
       <div className='flex justify-between'>
         <h1 className='text-3xl font-black'>Filtro IPs</h1>
         <a className='mb-10 text-xl' href="https://github.com/MiguelHigueraDev/ip-log-filter/" target="_blank" rel="noopener noreferrer">GitHub repo</a>
       </div>
 
-      <div className="grid grid-cols-2 min-h-[600px] gap-4">
+      <div className="grid grid-cols-2 min-h-[350px] gap-4">
         <div className='w-full h-full'>
           <h1 className="text-2xl font-bold mb-2">Ingresa log de IPs</h1>
           <textarea className='w-full h-full resize-none text-xl p-2' value={ipLog} onInput={handleIpLogChange} onKeyDown={updateList} onKeyUp={updateList}></textarea>
@@ -67,7 +67,7 @@ function App() {
           <textarea className='w-full h-full resize-none text-xl p-2' value={ignoredIps} onInput={handleIgnoredIpsChange} onKeyDown={updateList} onKeyUp={updateList}></textarea>
         </div>
       </div>
-      <div className="grid grid-cols-1 mt-[50px] min-h-[200px]">
+      <div className="grid grid-rows-1 grid-cols-2 gap-3 mt-[50px] min-h-[300px]">
         <div className='w-full h-full'>
           <div className="flex gap-3">
             <h1 className="text-2xl font-bold">Lista de IP filtradas</h1>
@@ -75,8 +75,6 @@ function App() {
           </div>
           <textarea className='w-full h-full resize-none text-xl p-2' value={filteredIps} readOnly></textarea>
         </div>
-      </div>
-      <div className="grid grid-cols-1 mt-[50px] min-h-[200px]">
         <div className='w-full h-full'>
           <div className='flex gap-3'>
             <h1 className="text-2xl font-bold">Formateadas</h1>
