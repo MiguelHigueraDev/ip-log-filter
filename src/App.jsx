@@ -31,6 +31,14 @@ function App() {
     updateList()
   }
 
+  const copyIps = () => {
+    navigator.clipboard.writeText(filteredIps).catch(() => {alert('Se produjo un error al copiar al portapapeles.')})
+  }
+
+  const copyFormattedIps = () => {
+    navigator.clipboard.writeText(formattedIps).catch(() => {alert('Se produijo un error al copiar al portapapeles.')})
+  }
+
   const updateList = () => {
     const ipPattern = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
     const ips = ipLog.match(ipPattern)
@@ -61,13 +69,19 @@ function App() {
       </div>
       <div className="grid grid-cols-1 mt-[50px] min-h-[200px]">
         <div className='w-full h-full'>
-          <h1 className="text-2xl font-bold">Lista de IPs filtradas</h1>
+          <div className="flex gap-3">
+            <h1 className="text-2xl font-bold">Lista de IP filtradas</h1>
+            <button type="button" onClick={copyIps}>Copiar</button>
+          </div>
           <textarea className='w-full h-full resize-none text-xl p-2' value={filteredIps} readOnly></textarea>
         </div>
       </div>
       <div className="grid grid-cols-1 mt-[50px] min-h-[200px]">
         <div className='w-full h-full'>
-          <h1 className="text-2xl font-bold">Formateadas</h1>
+          <div className='flex gap-3'>
+            <h1 className="text-2xl font-bold">Formateadas</h1>
+            <button type="button" onClick={copyFormattedIps}>Copiar</button>
+          </div>
           <textarea className='w-full h-full resize-none text-xl p-2' value={formattedIps} readOnly></textarea>
         </div>
       </div>
