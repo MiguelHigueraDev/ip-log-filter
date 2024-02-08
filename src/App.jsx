@@ -3,10 +3,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const [ipLog, setIpLog] = useState(() => {
-    const storedIpLog = localStorage.getItem('ipLog')
-    return storedIpLog ? storedIpLog : ''
-  })
+  const [ipLog, setIpLog] = useState('')
   const [ignoredIps, setIgnoredIps] = useState(() => {
     const storedIgnoredIps = localStorage.getItem('ignoredIps')
     return storedIgnoredIps ? storedIgnoredIps : ''
@@ -17,9 +14,8 @@ function App() {
     .map(ip => `-A INPUT -s ${ip} -j DROP`).join('\n')
 
   useEffect(() => {
-    localStorage.setItem('ipLog', ipLog)
     localStorage.setItem('ignoredIps', ignoredIps)
-  }, [ipLog, ignoredIps])
+  }, [ignoredIps])
 
   const handleIpLogChange = (event) => {
     setIpLog(event.target.value)
