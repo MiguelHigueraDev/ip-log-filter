@@ -36,7 +36,7 @@ function App() {
   }
 
   const updateList = () => {
-    const ipPattern = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
+    const ipPattern = /\b(?:\d{1,3}\.){3}\d{1,3}(?:\/\d+)?\b/g;
     const ips = ipLog.match(ipPattern)
     const differentIps = new Set(ips)
     const ipList = Array.from(differentIps).join('\n')
