@@ -9,13 +9,18 @@ function App() {
     return storedIgnoredIps ? storedIgnoredIps : ''
   })
   const [filteredIps, setFilteredIps] = useState('')
+  const [countries, setCountries] = useState([])
 
-  const formattedIps = filteredIps.split('\n')
+  const formattedIps = (filteredIps === "") ? "" : filteredIps.split('\n')
     .map(ip => `-A INPUT -s ${ip} -j DROP`).join('\n')
+
+  const ignoredIpsCount = ignoredIps.trim().split('\n').filter(ip => ip !== "").length
+  const filteredIpsCount = filteredIps.trim().split('\n').filter(ip => ip !== "").length
 
   useEffect(() => {
     localStorage.setItem('ignoredIps', ignoredIps)
   }, [ignoredIps])
+
 
   const handleIpLogChange = (event) => {
     setIpLog(event.target.value)
@@ -46,6 +51,25 @@ function App() {
     if (filteredIps != null) setFilteredIps(filteredIps)
     else setFilteredIps('')
   }
+
+  const loadCountries = async () => {
+    const ips = filteredIps.split('\n')
+    setCountries([])
+    try {
+      for (const ip of ips) {
+        const country = await fetch(`http://ip-api.com/json/${ip}?fields=country`)
+        const data = await country.json()
+        if (data.country != null) {
+          setCountries(prev => [...prev, `${ip} - ${data.country}`])
+        } 
+      }
+    } catch (error) {
+      console.error(error)
+      alert('Se produjo un error al obtener información de la API.')
+    }
+
+
+  }
   return (
     <main className="min-h-screen bg-gray-200 max-w-7xl mx-auto  p-4">
       <div className='flex justify-between'>
@@ -59,24 +83,44 @@ function App() {
           <textarea className='w-full h-full resize-none text-xl p-2' value={ipLog} onInput={handleIpLogChange} onKeyDown={updateList} onKeyUp={updateList}></textarea>
         </div>
         <div className='w-full h-full'>
-          <h1 className="text-2xl font-bold mb-2">IPs ignoradas (ingresa una por fila)</h1>
+          { (ignoredIpsCount > 0) ? (
+            <h1 className="text-2xl font-bold mb-2">IPs ignoradas ({ignoredIpsCount})</h1>
+          ): (
+            <h1 className="text-2xl font-bold mb-2">IPs ignoradas</h1>
+          )}
+          
           <textarea className='w-full h-full resize-none text-xl p-2' value={ignoredIps} onInput={handleIgnoredIpsChange} onKeyDown={updateList} onKeyUp={updateList}></textarea>
         </div>
       </div>
-      <div className="grid grid-rows-1 grid-cols-2 gap-3 mt-[50px] min-h-[300px]">
+      <div className="grid grid-rows-1 grid-cols-3 gap-3 mt-[50px] min-h-[300px]">
         <div className='w-full h-full'>
           <div className="flex gap-3">
-            <h1 className="text-2xl font-bold">Lista de IP filtradas</h1>
+            { (filteredIpsCount > 0) ? (
+              <h1 className="text-2xl font-bold">Lista de IP filtradas ({filteredIpsCount})</h1>
+            ) : (
+              <h1 className="text-2xl font-bold">Lista de IP filtradas</h1>
+            )}
             <button type="button" onClick={copyIps}>Copiar</button>
           </div>
           <textarea className='w-full h-full resize-none text-xl p-2' value={filteredIps} readOnly></textarea>
         </div>
         <div className='w-full h-full'>
           <div className='flex gap-3'>
-            <h1 className="text-2xl font-bold">Formateadas</h1>
+          { (filteredIpsCount > 0) ? (
+              <h1 className="text-2xl font-bold">Formateadas ({filteredIpsCount})</h1>
+            ) : (
+              <h1 className="text-2xl font-bold">Formateadas</h1>
+            )}
             <button type="button" onClick={copyFormattedIps}>Copiar</button>
           </div>
           <textarea className='w-full h-full resize-none text-xl p-2' value={formattedIps} readOnly></textarea>
+        </div>
+        <div className="w-full h-full">
+          <div className="flex gap-3">
+            <h1 className="text-2xl font-bold">Países</h1>
+            <button type="button" onClick={loadCountries}>Cargar países</button>
+          </div>
+          <textarea className='w-full h-full resize-none text-xl p-2' value={countries.join('\n')} readOnly></textarea>
         </div>
       </div>
     </main>
