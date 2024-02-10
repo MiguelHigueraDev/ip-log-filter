@@ -60,7 +60,13 @@ function App() {
         const country = await fetch(`https://freeipapi.com/api/json/${ip}`)
         const data = await country.json()
         if (data.countryName != null) {
-          setCountries(prev => [...prev, `${ip} - ${data.countryName}`])
+          // Unknown
+          if (data.countryName === '-') {
+            setCountries(prev => [...prev, `${ip} - IP INVÁLIDA`])
+          } else {
+            setCountries(prev => [...prev, `${ip} - ${data.countryName}`])
+          }
+
         } 
       }
     } catch (error) {
