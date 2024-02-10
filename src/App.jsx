@@ -57,10 +57,10 @@ function App() {
     setCountries([])
     try {
       for (const ip of ips) {
-        const country = await fetch(`https://ip-api.com/json/${ip}?fields=country`)
+        const country = await fetch(`https://freeipapi.com/api/json/${ip}`)
         const data = await country.json()
-        if (data.country != null) {
-          setCountries(prev => [...prev, `${ip} - ${data.country}`])
+        if (data.countryName != null) {
+          setCountries(prev => [...prev, `${ip} - ${data.countryName}`])
         } 
       }
     } catch (error) {
