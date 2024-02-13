@@ -129,6 +129,7 @@ function App() {
           <textarea className='w-full h-full resize-none text-xl p-2' value={countries.join('\n')} readOnly></textarea>
         </div>
       </div>
+      <p className='mt-10 text-center'>La API tiene un rate limit de 60 consultas por segundo, por IP.</p>
     </main>
     
   )
