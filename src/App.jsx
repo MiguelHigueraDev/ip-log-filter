@@ -11,8 +11,8 @@ function App() {
   const [filteredIps, setFilteredIps] = useState('')
   const [countries, setCountries] = useState([])
 
-  const formattedIps = (filteredIps === "") ? "" : filteredIps.split('\n')
-    .map(ip => `-A INPUT -s ${ip} -j DROP`).join('\n')
+  const formattedIps = (filteredIps === "") ? "" : 
+  filteredIps.split('\n').map(ip => `-A INPUT -s ${ip} -j DROP`).join('\n')
 
   const ignoredIpsCount = ignoredIps.trim().split('\n').filter(ip => ip !== "").length
   const filteredIpsCount = filteredIps.trim().split('\n').filter(ip => ip !== "").length
@@ -38,14 +38,13 @@ function App() {
 
   const updateList = () => {
     const ipPattern = /\b(?:\d{1,3}\.){3}\d{1,3}(?:\/\d+)?\b/g;
-    const ips = ipLog.match(ipPattern)
-    const differentIps = new Set(ips)
-    const ipList = Array.from(differentIps)
+    const allIps = ipLog.match(ipPattern)
+    const uniqueIps = new Set(allIps)
+    const ipList = Array.from(uniqueIps)
     // Remove entries that are ignored
     const ignored = ignoredIps.split('\n')
     const filteredIps = ipList.filter(ip => !ignored.includes(ip)).join('\n')
-    if (filteredIps != null) setFilteredIps(filteredIps)
-    else setFilteredIps('')
+    filteredIps != null ? setFilteredIps(filteredIps) : setFilteredIps('')
   }
 
   const loadCountries = async () => {
