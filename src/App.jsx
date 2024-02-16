@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Analytics } from '@vercel/analytics/react'
 import './App.css'
 
 function App() {
@@ -73,7 +72,6 @@ function App() {
   }
   return (
     <main className="min-h-screen bg-gray-200 max-w-7xl mx-auto  p-4">
-      <Analytics />
       <div className='flex justify-between'>
         <h1 className='text-3xl font-black'>Filtro IPs</h1>
         <a className='mb-10 text-xl' href="https://github.com/MiguelHigueraDev/ip-log-filter/" target="_blank" rel="noopener noreferrer">GitHub repo</a>
