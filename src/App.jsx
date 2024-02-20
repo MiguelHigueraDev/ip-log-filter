@@ -54,7 +54,7 @@ function App() {
     // Do not query API if list is empty
     if (ips.length < 1) return;
     if (ips.length === 1 && ips[0] === '') return;
-    
+
     setCountries([])
     try {
       for (const ip of ips) {
@@ -92,7 +92,7 @@ function App() {
         <FilteredIps filteredIps={filteredIps} copyToClipboard={copyToClipboard} isFormatted={isFormatted} handleFormatChange={handleFormatChange}/>
         <CountryList countries={countries} loadCountries={loadCountries} />
       </div>
-      <p className='mt-10 sm:mt-1 text-center'>The geolocalization API is limited to 60 requests per minute.</p>
+      <p className='mt-14 sm:mt-1 text-center'>The geolocalization API is limited to 60 requests per minute.</p>
     </main>
     
   )
