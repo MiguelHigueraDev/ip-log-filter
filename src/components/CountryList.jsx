@@ -10,6 +10,7 @@ const CountryList = ({countries, loadCountries}) => {
       <textarea
         className="w-full h-full resize-none text-xl p-2"
         value={countries.join("\n")}
+        aria-label="Country list"
         readOnly
       ></textarea>
     </div>

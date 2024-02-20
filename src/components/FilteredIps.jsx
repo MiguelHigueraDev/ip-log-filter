@@ -20,7 +20,7 @@ const FilteredIps = ({filteredIps, copyToClipboard, isFormatted, handleFormatCha
         </button>
       </div>
     </div>
-    <textarea className='w-full h-full resize-none text-xl p-2' value={formattedIps} readOnly></textarea>
+    <textarea className='w-full h-full resize-none text-xl p-2' value={formattedIps} aria-label="Formatted IPs (IPTables syntax)" readOnly></textarea>
   </div>
   )
 
@@ -41,7 +41,7 @@ const FilteredIps = ({filteredIps, copyToClipboard, isFormatted, handleFormatCha
         </button>
       </div>
     </div>
-    <textarea className='w-full h-full resize-none text-xl p-2' value={filteredIps} readOnly></textarea>
+    <textarea className='w-full h-full resize-none text-xl p-2' value={filteredIps} aria-label="Filtered IPs" readOnly></textarea>
   </div>
   )
 }

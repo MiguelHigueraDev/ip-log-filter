@@ -12,6 +12,7 @@ const IgnoredIps = ({ignoredIps, handleIgnoredIpsChange, updateList}) => {
 
       <textarea
         className="w-full h-full resize-none text-xl p-2"
+        aria-label="Enter ignored IPs here (whitelist)"
         value={ignoredIps}
         onInput={handleIgnoredIpsChange}
         onKeyDown={updateList}
