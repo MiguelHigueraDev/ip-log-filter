@@ -81,7 +81,7 @@ function App() {
     <main className="min-h-screen bg-gray-200 max-w-4xl mx-auto  p-4">
       <div className='flex justify-between mb-4'>
         <h1 className='text-3xl font-black'>IP Log Filter</h1>
-        <a href="https://github.com/MiguelHigueraDev/ip-log-filter/" aria-label="Go to the GitHub repository for this project" target="_blank" rel="noopener noreferrer"><img src="/github.svg" height={40} width={40} className='' alt="GitHub Logo" /></a>
+        <a href="https://github.com/MiguelHigueraDev/ip-log-filter/" aria-label="Go to this project's GitHub repository" target="_blank" rel="noopener noreferrer"><img src="/github.svg" height={40} width={40} className='' alt="GitHub Logo" /></a>
       </div>
 
       <div className="flex flex-col-reverse sm:flex-row min-h-[350px] gap-4">
