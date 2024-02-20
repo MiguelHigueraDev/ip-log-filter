@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
+import IpLog from './components/IpLog'
 import './App.css'
+import IgnoredIps from './components/IgnoredIps'
+import FilteredIps from './components/FilteredIps'
+import CountryList from './components/CountryList'
 
 function App() {
   const [ipLog, setIpLog] = useState('')
@@ -9,12 +13,7 @@ function App() {
   })
   const [filteredIps, setFilteredIps] = useState('')
   const [countries, setCountries] = useState([])
-
-  const formattedIps = (filteredIps === "") ? "" : 
-  filteredIps.split('\n').map(ip => `-A INPUT -s ${ip} -j DROP`).join('\n')
-
-  const ignoredIpsCount = ignoredIps.trim().split('\n').filter(ip => ip !== "").length
-  const filteredIpsCount = filteredIps.trim().split('\n').filter(ip => ip !== "").length
+  const [isFormatted, setIsFormatted] = useState(false)
 
   useEffect(() => {
     localStorage.setItem('ignoredIps', ignoredIps)
@@ -31,8 +30,12 @@ function App() {
     updateList()
   }
 
+  const handleFormatChange = () => {
+    setIsFormatted(!isFormatted)
+  }
+
   const copyToClipboard = (state) => {
-    navigator.clipboard.writeText(state).catch(() => {alert('Se produjo un error al copiar al portapapeles.')})
+    navigator.clipboard.writeText(state).catch(() => {alert('An error has ocurred while copying to the clipboard.')})
   }
 
   const updateList = () => {
@@ -48,6 +51,10 @@ function App() {
 
   const loadCountries = async () => {
     const ips = filteredIps.split('\n')
+    // Do not query API if list is empty
+    if (ips.length < 1) return;
+    if (ips.length === 1 && ips[0] === '') return;
+    
     setCountries([])
     try {
       for (const ip of ips) {
@@ -65,65 +72,27 @@ function App() {
       }
     } catch (error) {
       console.error(error)
-      alert('Se produjo un error al obtener información de la API.')
+      alert('Error loading countries from API.')
     }
 
 
   }
   return (
-    <main className="min-h-screen bg-gray-200 max-w-7xl mx-auto  p-4">
-      <div className='flex justify-between'>
-        <h1 className='text-3xl font-black'>Filtro IPs</h1>
-        <a className='mb-10 text-xl' href="https://github.com/MiguelHigueraDev/ip-log-filter/" target="_blank" rel="noopener noreferrer">GitHub repo</a>
+    <main className="min-h-screen bg-gray-200 max-w-4xl mx-auto  p-4">
+      <div className='flex justify-between mb-4'>
+        <h1 className='text-3xl font-black'>IP Log Filter</h1>
+        <a href="https://github.com/MiguelHigueraDev/ip-log-filter/" aria-label="Go to the GitHub repository for this project" target="_blank" rel="noopener noreferrer"><img src="/github.svg" height={40} width={40} className='' alt="GitHub Logo" /></a>
       </div>
 
-      <div className="grid grid-cols-2 min-h-[350px] gap-4">
-        <div className='w-full h-full'>
-          <h1 className="text-2xl font-bold mb-2">Ingresa log de IPs</h1>
-          <textarea className='w-full h-full resize-none text-xl p-2' value={ipLog} onInput={handleIpLogChange} onKeyDown={updateList} onKeyUp={updateList}></textarea>
-        </div>
-        <div className='w-full h-full'>
-          { (ignoredIpsCount > 0) ? (
-            <h1 className="text-2xl font-bold mb-2">IPs ignoradas ({ignoredIpsCount})</h1>
-          ): (
-            <h1 className="text-2xl font-bold mb-2">IPs ignoradas</h1>
-          )}
-          
-          <textarea className='w-full h-full resize-none text-xl p-2' value={ignoredIps} onInput={handleIgnoredIpsChange} onKeyDown={updateList} onKeyUp={updateList}></textarea>
-        </div>
+      <div className="flex flex-col-reverse sm:flex-row min-h-[350px] gap-4">
+        <IpLog ipLog={ipLog} handleIpLogChange={handleIpLogChange} updateList={() => updateList()}/>
+        <IgnoredIps ignoredIps={ignoredIps} handleIgnoredIpsChange={handleIgnoredIpsChange} updateList={() => updateList()}/>
       </div>
-      <div className="grid grid-rows-1 grid-cols-3 gap-3 mt-[50px] min-h-[300px]">
-        <div className='w-full h-full'>
-          <div className="flex gap-3">
-            { (filteredIpsCount > 0) ? (
-              <h1 className="text-2xl font-bold">Lista de IP filtradas ({filteredIpsCount})</h1>
-            ) : (
-              <h1 className="text-2xl font-bold">Lista de IP filtradas</h1>
-            )}
-            <button type="button" onClick={() => copyToClipboard(filteredIps)}>Copiar</button>
-          </div>
-          <textarea className='w-full h-full resize-none text-xl p-2' value={filteredIps} readOnly></textarea>
-        </div>
-        <div className='w-full h-full'>
-          <div className='flex gap-3'>
-          { (filteredIpsCount > 0) ? (
-              <h1 className="text-2xl font-bold">Formateadas ({filteredIpsCount})</h1>
-            ) : (
-              <h1 className="text-2xl font-bold">Formateadas</h1>
-            )}
-            <button type="button" onClick={() => copyToClipboard(formattedIps)}>Copiar</button>
-          </div>
-          <textarea className='w-full h-full resize-none text-xl p-2' value={formattedIps} readOnly></textarea>
-        </div>
-        <div className="w-full h-full">
-          <div className="flex gap-3">
-            <h1 className="text-2xl font-bold">Países</h1>
-            <button type="button" onClick={loadCountries}>Cargar países</button>
-          </div>
-          <textarea className='w-full h-full resize-none text-xl p-2' value={countries.join('\n')} readOnly></textarea>
-        </div>
+      <div className="flex flex-col sm:flex-row min-h-[350px] gap-4">
+        <FilteredIps filteredIps={filteredIps} copyToClipboard={copyToClipboard} isFormatted={isFormatted} handleFormatChange={handleFormatChange}/>
+        <CountryList countries={countries} loadCountries={loadCountries} />
       </div>
-      <p className='mt-10 text-center'>La API de países tiene un rate limit de 60 consultas por minuto, por IP.</p>
+      <p className='mt-10 sm:mt-1 text-center'>The geolocalization API is limited to 60 requests per minute.</p>
     </main>
     
   )
